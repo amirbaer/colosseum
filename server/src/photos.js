@@ -20,8 +20,11 @@ var Photo = mongoose.model("Photo", PhotoSchema);
 
 /* DB ACCESS */
 
-function getAllPhotos(callback) {
-  Photo.find({}, 'path size ext', function (error, db_photos) {
+function getAllPhotos(callback, skip=0, limit=0) {
+  Photo.find({}, 'path size ext').
+  skip(skip).
+  limit(limit).
+  exec(function (error, db_photos) {
     if (error) {
       callback(error);
     }

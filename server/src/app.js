@@ -15,17 +15,22 @@ app.use(cors())
 /* RUN PARAMS */
 
 MONGODB_URL = "mongodb://localhost:27017/library";
+RESULTS_PER_PAGE = 50
 
 /* TARGETS */
 
 app.get('/photos', (req, res) => {
+  var page = req.query.page || 1;
+  var skip = (page - 1) * RESULTS_PER_PAGE;
+  var limit = RESULTS_PER_PAGE;
+
   photos.getAllPhotos(function(err, photos) {
     if (err) {
       console.error(err);
       return;
     }
     res.send(photos)
-  })
+  }, skip, limit)
 })
 
 /* SERVER */
