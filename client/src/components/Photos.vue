@@ -22,7 +22,7 @@ export default {
       photos: []
     }
   },
-  mounted () {
+  created () {
     this.getPhotos()
   },
   methods: {
