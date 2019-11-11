@@ -6,6 +6,7 @@
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="limit">
       <div v-for="photo in photos" v-bind:key="photo._id" data-aos="slide-up" data-aos-offset="100" data-aos-easing="ease-out-back">
         <p>
+          <img v-bind:src="photo.thumbnail" />
           <span><b>{{ photo.filename }}</b></span><br />
           <span>{{ photo.size }}</span>
         </p>
@@ -31,19 +32,17 @@ export default {
   },
   created () {
     AOS.init()
-    this.getPhotos()
+    PhotosService.fetchPhotos()
+      .then(photos => (this.photos = this.photos.concat(photos)))
   },
   methods: {
-    async getPhotos (page) {
-      const response = await PhotosService.fetchPhotos(this.page)
-      this.photos = response.data
-    },
     loadMore () {
       this.busy = true
       this.page += 1
 
       setTimeout(() => {
-        this.photos.concat(this.getPhotos(this.page))
+        PhotosService.fetchPhotos(this.page)
+          .then(photos => (this.photos = this.photos.concat(photos)))
         this.busy = false
       }, 1000)
     }

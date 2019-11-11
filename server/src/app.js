@@ -15,7 +15,7 @@ app.use(cors())
 /* RUN PARAMS */
 
 MONGODB_URL = "mongodb://localhost:27017/library";
-RESULTS_PER_PAGE = 50
+RESULTS_PER_PAGE = 20
 
 /* TARGETS */
 

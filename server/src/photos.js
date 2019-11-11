@@ -13,6 +13,7 @@ var PhotoSchema = new Schema({
   hashe: String,
   size: Number,
   thumbnail: Buffer,
+  //thumbnail: { data: Buffer, contentType: String }
   ext: String
 });
 
@@ -21,7 +22,7 @@ var Photo = mongoose.model("Photo", PhotoSchema);
 /* DB ACCESS */
 
 function getAllPhotos(callback, skip=0, limit=0) {
-  Photo.find({}, 'path size ext').
+  Photo.find({}, 'path size ext thumbnail').
   skip(skip).
   limit(limit).
   exec(function (error, db_photos) {
