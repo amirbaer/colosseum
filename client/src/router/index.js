@@ -9,6 +9,7 @@ export default new Router({
   routes: [
     {
       path: '/photos',
+      alias: '/',
       name: 'Photos',
       component: Photos
     }
