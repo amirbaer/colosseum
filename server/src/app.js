@@ -17,6 +17,15 @@ app.use(cors())
 MONGODB_URL = "mongodb://localhost:27017/library";
 RESULTS_PER_PAGE = 20
 
+/* SERVER */
+
+mongoose.connect(MONGODB_URL);
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error"));
+db.once("open", function(callback){
+      console.log("Connection Succeeded");
+});
+
 /* TARGETS */
 
 app.get('/photos', (req, res) => {
@@ -30,16 +39,19 @@ app.get('/photos', (req, res) => {
       return;
     }
     res.send(photos)
-  }, skip, limit)
+  }, skip, limit);
 })
 
-/* SERVER */
+app.get('/photos-rand', (req, res) => {
+  var limit = RESULTS_PER_PAGE;
 
-mongoose.connect(MONGODB_URL);
-var db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function(callback){
-      console.log("Connection Succeeded");
-});
+  photos.getRandomPhotos(function(err, photos) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    res.send(photos)
+  }, limit);
+})
 
 app.listen(process.env.PORT || 8081)

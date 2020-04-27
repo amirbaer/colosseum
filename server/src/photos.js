@@ -33,6 +33,22 @@ function getAllPhotos(callback, skip=0, limit=0) {
   })
 }
 
+function getRandomPhotos(callback, count=20) {
+  Photo.aggregate([{'$sample' : {'size': count}}], function (error, db_photos_objs) {
+    if (error) {
+      callback(error);
+    }
+
+    // convert to Photo object
+    var db_photos = []
+    db_photos_objs.forEach(function(obj) {
+      db_photos.push(new Photo(obj));
+    });
+
+    callback(null, enrich_photos(helpers.db_to_json(db_photos)))
+  })
+}
+
 /* ENRICHMENT */
 
 function enrich_photos(json_photos) {
@@ -47,4 +63,5 @@ function enrich_photos(json_photos) {
 
 module.exports = {
   getAllPhotos,
+  getRandomPhotos,
 }
