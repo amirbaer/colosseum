@@ -1,8 +1,9 @@
 <template>
   <div class="photos">
     <h1>Photos</h1>
-    This file will list all the photos.
+    Randomize:
 
+    <toggle-button @change="toggleRandom" :labels="{checked: 'On', unchecked: 'Off'}" style="margin-left: 20px" />
     <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="limit">
       <div v-for="photo in photos" v-bind:key="photo._id" data-aos="slide-up" data-aos-offset="100" data-aos-easing="ease-out-back">
         <p>
@@ -27,7 +28,8 @@ export default {
     return {
       photos: [],
       busy: false,
-      page: 1
+      page: 1,
+      random: false
     }
   },
   created () {
@@ -41,10 +43,22 @@ export default {
       this.page += 1
 
       setTimeout(() => {
-        PhotosService.fetchPhotos(this.page)
-          .then(photos => (this.photos = this.photos.concat(photos)))
-        this.busy = false
+        if (!this.random) {
+          PhotosService.fetchPhotos(this.page)
+            .then(photos => (this.photos = this.photos.concat(photos)))
+          this.busy = false
+        } else {
+          PhotosService.fetchRandomPhotos()
+            .then(photos => (this.photos = this.photos.concat(photos)))
+          this.busy = false
+        }
       }, 1000)
+    },
+    toggleRandom () {
+      this.random = !this.random
+      this.photos = []
+      this.page = 0
+      this.loadMore()
     }
   },
   directives: {
