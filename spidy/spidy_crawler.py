@@ -75,6 +75,7 @@ def main(photo_dir_path):
 
     import time
     a = time.time()
+    count = 0
 
 
     db = get_mongo_db()
@@ -87,9 +88,11 @@ def main(photo_dir_path):
         if db.photos.replace_one(photo.get_json_id(), photo.to_json(), upsert=True):
             #print(photo.path)
             print(".", sep="", end="", flush=True)
+            count += 1
 
     b = time.time()
     print("\ndone.")
+    print("%d photos scanned and added" % count)
 
     print("time: %s sec" % (b - a))
 
